@@ -1,0 +1,133 @@
+{
+	"config": {
+		"steps": [
+			{	
+				"name": "welcome",
+				"show": true,
+				"screen": {
+					"head": "Welcome to the Western Cape and Gauteng Water Resources Management Survey",
+					"body": "Please click on the continue-button.",
+					"button": "Continue..."
+				},
+				"task": "none"
+ 			},
+ 			{
+ 				"name": "login",
+ 				"show": false
+ 			},
+			{
+				"name": "intro",
+				"show": true,
+				"screen": {
+					"head": "Introduction",
+					"body": "Thank you for taking the time to complete this survey, being conducted by Amanda Lynch of Brown University (USA), Coleen Vogel of University of Witwatersrand and Gillian Maree of the Gauteng City-Region Observatory. The purpose of the survey is to elicit the perspectives of practitioners and experts working directly on aspects of water management in South Africa, with a focus on Western Cape and Gauteng. Experts from outside of these regions are invited to participate as well, to provide additional insights. Survey responses are anonymous and cannot be connected to the survey respondent in any way. We appreciate your candour and your expertise in this critical area. Participation in this survey is voluntary. <br><br>This survey consists of 23 statements and asks you to sort them on how strongly you agree or disagree with each statement. There are no ‘right’ or ‘wrong’ answers. Instructions for the survey will be provided as you continue. The survey should take approximately 20 minutes to complete. <br><br>At the conclusion of the survey, there will be a few optional questions regarding your role in water resources management. Survey responses are sent when you click the SUBMIT button. <br><br>Should you have any questions regarding this survey, please send an email to amanda_lynch@brown.edu or coleen.vogel@wits.ac.za or gillian.maree@gcro.ac.za<br><br>Please click on the \"continue\" button to start the survey.",
+					"button": "Continue..."
+				},
+				"task": "none"
+			},
+			{
+				"name": "step1",
+				"show": true,
+				"screen": {
+					"head": "Step 1 of 5",
+					"body": "Read the following statements carefully and arrange them (click and drag) into three piles: a pile for statements you tend to AGREE with, a pile for statements you tend to DISAGREE with, and a pile for the rest.<br><br>You can either drag the statements into one of the three piles or press 1, 2, 3 on your keyboard as statements appear on your screen. <br><br>If there is a statement you don't understand or think is unimportant, place it in the NEUTRAL pile.<br><br>Do not worry about how many statements you place under each category as changes can be made in subsequent steps.<br><br>If you want to read this instruction again, click the \"help\" button at the bottom right corner of your screen.",				
+					"button": "Continue..."				
+				},
+				"task": "threeColumnSort",
+				"skippable": false
+			},
+			{
+				"name": "step2",
+				"show": true,
+				"screen": {
+					"head": "Step 2 of 5",
+					"body": "Take the statements from the AGREE pile and read them again. You can scroll through the statements by using the scroll bar. Next, select the two statements you find you AGREE with the most and place (click-and-drag) them inside a blank box on right side of the score sheet below the \"+3\".<br><br>Now read the statements in the DISAGREE pile again. Just as before, select the two statements you find you DISAGREE with the most and place (click-and-drag) each one inside a blank box on the left side of the score sheet below the \"-3\".<br><br>Now select the next two statements you most agree with from the AGREE pile and place them under \"+2\". Similarly, select the next two statements you most disagree with from the DISAGREE pile and place them under \"-2\". Follow this procedure for all statements in the AGREE and DISAGREE piles. <br><br>Finally, read the NEUTRAL statements again and arrange them in the remaining open boxes of the score sheet.<br><br>Do not worry if space limitations force you to place statements you agree with in NEUTRAL or DISAGREE squares. Agreement or disagreement is relative to the rest of the other statements, and a 'negative' ranking may only indicate that there is greater agreement with other statements.",
+					"button": "Continue..."				
+				},
+				"task": "distributionSort",
+				"skippable": false
+			},
+			{
+				"name": "step3",
+				"show": true,
+				"screen": {
+					"head": "Step 3 of 5",
+					"body": "Now you have placed all statements on the score sheet. Please go over your distribution once more and swap statements if you want to. Just 'click-and-drag' the statement you wish to swap and place it in its new box.",
+					"button": "Continue..."				
+				},
+				"task": "checkSort",
+				"skippable": false			
+			},
+			{
+				"name": "step4",
+				"show": true,
+				"screen": {
+					"head": "Step 4 of 5",
+					"body": "OPTIONAL: please explain your thinking behind your choice for statements you AGREE and DISAGREE with the most - that is, those you placed below \"+3\" or \"-3\". You can see the whole statement by hovering your mouse over the statement card at the left.",
+					"button": "Continue..."				
+				},
+				"task": "reasoning",
+				"skippable": true
+
+			},
+			{
+				"name": "step5",
+				"show": true,
+				"screen": {
+					"head": "Step 5 of 5",
+					"body": "Finally, should you wish to do so, please answer the following optional questions.",
+					"button": "Continue..."				
+				},
+				"task": "additionalQs",
+				"skippable": true			
+			},
+			{
+				"name": "submitData",
+				"show": true,
+				"sendEmail": false,
+				"sendDB": false,
+				"screen": {
+					"head": "Submit Data",
+					"body": "Great! You've finished the survey. Thank you very much for your valuable time. Please submit your data now. Should you have any questions or comments regarding this survey, please send an email to amanda_lynch@brown.edu or coleen.vogel@wits.ac.za or gillian.maree@gcro.ac.za",
+					"button": "Close..."				
+				},
+				"task": "none"
+			}
+		]
+	},
+	"map": {
+		"columns" : 7,
+		"headerArray" : ["-3", "-2", "-1", "0", "1", "2", "3"],
+		"rowArray" : [2, 3, 4, 5, 4, 3, 2]
+	},
+	"statements": {
+		"shuffle": true,
+		"statements": {
+						"1" : "The Free Basic Water policy ensures essential supply for health and safety during periods of scarcity.",
+						"2" : "Wealthy households routinely insulate themselves from demand management measures during water crises.",
+						"3" : "With increasing frequency of load shedding, the energy intensity of the water sector is our most critical vulnerability.",
+						"4" : "Lack of investment in wastewater infrastructure is the most critical health and safety concern, and is exacerbated by load shedding.",
+						"5" : "Technical demand side management solutions, including metering and leak detection, are being implemented effectively.",
+						"6" : "Policies to encourage water conservation are insufficient on their own because water supply is inadequate even in normal rainfall years.",
+						"7" : "Lack of leadership and poor financial management are the most significant institutional barriers to effective water management.",
+						"8" : "Water institutions are too reliant on consultants to make up for shortages in technical staff and other capacity gaps.",
+						"9" : "Corruption has severely damaged public trust in provincial and national government to manage periods of water scarcity.",
+						"10" : "Cape Town was never truly at risk of a \"Day Zero\" total exhaustion of supply.",
+						"11" : "Poor communication and limited coordination across siloed departments is a major contributor to water crises.",
+						"12" : "The long-lasting economic impacts of water scarcity are not factored sufficiently into water policy planning.",
+						"13" : "Enforcement of demand management regulations during water crises is applied unequally.",
+						"14" : "Agricultural water users are allocated and use an appropriate proportion of available water.",
+						"15" : "Diversifying to alternative water sources, including groundwater, desalination and recycling, will be necessary water scarcity.",
+						"16" : "Water scarcity is substantially the result of inadequate bulk water infrastructure, such as reservoirs and interbasin transfers.",
+						"17" : "Handling of recent water crises has amplified public mistrust in water institutions at every level of government.",
+						"18" : "Conflict between municipal, provincial and national government consistently hinders timely and effective response to water scarcity.",
+						"19" : "Climate change was the primary cause of the 2018 Cape Town water crisis.",
+						"20" : "Rapid urban population growth was the primary cause fo the 2018 Cape Town water crisis.",
+						"21" : "At present, urban planning and policy account sufficiently for ensuring adequate water supply and waste management.",
+						"22" : "Environmental regulations on the extraction of water from rivers and aquifers should be disregarded during urban water crises.",
+						"23" : "The benefits of expanding bulk water infrastructure should be weighed carefully against impacts on biodiversity."
+					}
+
+
+	}
+}
