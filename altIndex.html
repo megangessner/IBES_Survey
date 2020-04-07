@@ -1,0 +1,231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+	<head>
+		<title>QSurvey</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.css"/>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"></script>
+		<script src="classes.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<!-- 		<script src="dragDrop.js"></script>-->		
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	</head>
+	<body onload="loadJSON()" class="container-fluid" style="z-index:-1;">
+
+		<div id="content">
+
+			<div id="informationPopup" class="container info modal center-block" style="background-color:white;">
+				<h4 id="head">
+					Here's some words
+				</h4>
+				<div id="body">
+					Here's some more words
+				</div>
+				<br/>
+
+				<button id="button" type="button" class="btn btn-default" onclick="loadTask()"> Continue </button>
+			</div>
+
+			<div class="container-fluid step1 center-block" id="statementContainer" style="display:none;position:relative;top:10%;z-index:0;">
+			</div>
+
+			<div id="step2Container" class="step2" style="display:flex;flex-direction:column;align-content:center;">
+				<div id="distributionGrid" class="step2" style="position:relative; justify-content:center; display:none;">
+				</div>
+			</div>
+
+			<div id="threeColumnContainer" class="step1 step2 center-block" style="display:none;position:fixed;top:40%;left:50%;transform:translateX(-50%);height:100%;">
+
+				<div class="container center-block" id="threeColumn">
+
+					<div class="column-flex">
+						<h6 class="center-block">Agree</h6>
+						<div id="agreeCol" class="droptarget column">
+						</div>
+					</div>
+
+					<div class="column-flex">
+						<h6 class="center-block">Neutral</h6>					
+						<div id="neutCol" class="droptarget column">
+						</div>
+					</div>
+					<div class="column-flex" style="padding-right:5px">
+						<h6 class="center-block">Disagree</h6>					
+						<div id="disagreeCol" class="droptarget column">
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+		<script>
+			var currStep = -1;
+			var distributionGrid; // stores distribution grid for step 2, referenced in distributionSort() & loadJSON()
+			var drake; // holds drag and drop functionality
+			var statements, shuffleOrder; //stores statements in dictionary, and shuffled indices
+			var statementIndex = 0; // keeps track of where we are in statements
+			var stepCompleted = true;
+
+			const STEPS = {};
+			const TASKS = {
+				"threeColumnSort": threeColumnSort,
+				"distributionSort": distributionSort,
+				"checkSort": null,
+				"reasoning": null,
+				"additionalQs": null,
+				"none": null
+			};
+
+			function shuffle(array) {
+				//https://javascript.info/task/shuffle "Fisher-Yates Shuffle"
+			  	for (let i = array.length - 1; i > 0; i--) {
+			    	let j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
+			    	[array[i], array[j]] = [array[j], array[i]]; // swap elements
+			  	}
+
+			  	return array;
+			}
+
+			//////////////////////////////////////////////////////////////////////////////////
+			//DND Handlers 
+
+			// This makes the blue placecard appear where the card will be dropped
+			var placecard = $("<div></div>").css({"background-color":"lightblue"}).attr({"id":"placecard","class":"card"});
+
+			function dropHandler(el, tgt, src, sib) {
+				if (currStep == 1) {
+					dropNextCard();
+				}
+			}
+
+			//////////////////////////////////////////////////////////////////////////////////
+
+			// Parse config file
+			function loadJSON() {
+				$.getJSON({
+					url: "./settings/config.json",
+					success: function(data) {
+						// shuffle and store statements
+						if (data.statements.shuffle == true) {
+							shuffleOrder = shuffle(Object.keys(data.statements.statements));
+							statements = data.statements.statements;
+
+						}
+
+						// form the pyramid map
+						distributionGrid = new PyramidMap(data.map.columns, data.map.rowArray, data.map.headerArray).map;
+
+						// generate and store steps into global enumeration
+						$.each(data.config.steps, function(i, v) {
+							if (v.show == true) {
+								// add step to enum
+								STEPS[i] = new Step(v.screen.head, v.screen.body, v.screen.button, TASKS[v.task], v.name, i);
+							}
+							else {
+								STEPS[i] = null;
+							}
+						});
+
+					}
+
+				}).done(function() {
+
+					loadStep(0);
+					
+					drake = dragula([document.getElementById('statementContainer')], {
+						isContainer: function(el) {
+							return $(el).hasClass("droptarget");
+						},
+						moves: function(el, source, handle, sibling) {
+							return $(el).hasClass("card");
+						},
+						revertOnSpill: true
+					});
+					drake.on("drop", dropHandler);
+
+				}).fail(function() {
+
+					console.log("JSON did not load, either check JSON file or directory");
+					alert("Something went wrong! Try again later");
+
+				});
+			}
+
+			function loadStep(step) {
+
+				if (STEPS[step] == null) {
+					currStep += 1;
+					loadStep(currStep);
+					return;
+				}
+
+				STEPS[step].loadStepText();
+
+				$("#informationPopup").show();
+				
+				// need to complete the previous step first
+				if (stepCompleted == false) {
+    				document.getElementById("informationPopup").style.display = "none";
+					return;
+				}
+			}
+
+			function loadTask() {
+				if (STEPS[currStep].loadTask == null) {
+					currStep += 1;
+					loadStep(currStep);
+				}
+				else {
+					$('#informationPopup').hide();
+					STEPS[currStep].loadTask();
+				}
+			} 
+
+			function dropNextCard() {
+				// step completed
+				if (statementIndex >= shuffleOrder.length) {
+					currStep += 1;
+					loadStep(currStep);
+					return;
+				}
+
+				var statement = statements[shuffleOrder[statementIndex]];
+
+				var card = $("<div></div>").text(statement);
+
+				// card.prop({"draggable":"true"});
+				// card.attr({"id":"statement"+statementIndex, "ondragstart":"dragstartHandler(event)", "ondragend":"dragendHandler(event)", "ondrag":"dragHandler(event)", "class":"center-block card"});
+				card.attr({"id":"statement"+statementIndex, "class":"center-block card"});
+
+  				$("#statementContainer").append(card);
+
+  				statementIndex += 1;
+			}
+
+			function threeColumnSort() {
+
+				$(".step1").show();
+
+				dropNextCard();
+			}
+
+			function distributionSort() {
+
+				$(".step2").show();
+				//
+				$('#distributionGrid').append(distributionGrid);
+				var threeCol = $('#threeColumnContainer').detach();
+				$('#step2Container').append(threeCol);
+
+				$('#threeColumnContainer').css({'height':'auto', 'position':'relative', 'top':'0','padding-top':'60px'});
+				$('#threeColumn').css({'height':'auto'});
+
+			}
+		</script>
+	</body>
+</html>
